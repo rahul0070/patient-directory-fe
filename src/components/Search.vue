@@ -1,5 +1,10 @@
 <template>
   <div class="search-parent">
+  <div class="search-nav">
+  <span v-show="pagination.show"> Showing {{pagination.lRange}}to{{pagination.hRange}} of {{pagination.total}} </span>
+    <button v-show="isShow('next')" @click="updatePagination('next')"> Next </button>
+    <button v-show="isShow('prev')" @click="updatePagination('prev')" > Prev </button>
+  </div>
     <div class="search-table">
         <div class="search-row heading">
             <div class="search-row-name"> Name </div>
@@ -8,7 +13,7 @@
             <div class="search-row-clinic"> Clinic </div>
             <div class="search-row-updated"> Updated on </div>
         </div>
-        <div class="search-row" v-for="patient in patientsData" :key="patient._id">
+        <div class="search-row" @click="$emit('patientClicked', patient)" v-for="patient in patientsData" :key="patient._id">
             <div class="search-row-name"> {{patient.name}} </div>
             <div class="search-row-case"> {{patient.case}} </div>
             <div class="search-row-phone"> {{patient.phone}} </div>
@@ -26,17 +31,19 @@ export default {
     components: {
   },
     computed: {
-    ...mapGetters(['signedIn', 'patientsData'])
+    ...mapGetters(['signedIn', 'patientsData']),
+    ...mapState(['pagination'])
   },
   mounted() {
       this.load()
   },
   methods: {
-      ...mapActions(['getAll']),
+      ...mapActions(['getAll', 'setPagination']),
       load() {
           this.getAll()
           .then(res => {
               console.log('Get All', this.patientsData);
+                
           });
       },
       parseDate(str) {
@@ -44,10 +51,40 @@ export default {
           console.log(d.getDate(), d.getMonth(), d.getYear())
           if (!d) return '';
           return `${d.getDate()+1} / ${d.getMonth()+1} / ${d.getYear().toString()}`;
+      },
+      updatePagination(type) {
+          if (type === 'next') {
+              let next = this.pagination.hRange + 15;
+              if (next > this.pagination.total) next = this.pagination.total;
+              this.setPagination({lRange: this.pagination.lRange+15, hRange: next});
+          }
+          else {
+              let prev = this.pagination.lRange - 15;
+              if (prev < 0) prev = 0;
+              this.setPagination({lRange: prev, hRange: prev+15});
+          }
+      },
+      isShow(type) {
+          if (type === 'next') {
+              if (this.pagination.total > this.pagination.hRange) {
+                  return true
+              }
+          }
+          else {
+              if (0 < this.pagination.lRange) {
+                  return true
+              }
+          }
+          return false;
       }
   },
   data() {
     return {
+        paginationUI: {
+            show: false,
+            next: false,
+            prev: false
+        }
     }
   }
 }
