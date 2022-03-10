@@ -58,6 +58,17 @@ export default createStore({
                 commit('updateCurrent', state.searchedPatients); 
                 commit('updatePaginationInitial', {total: state.searchedPatients.length});
             }
+        },
+        async cancelSearch({state, commit}){
+            commit('updateAll', state.patients);
+            if (state.searchedPatients.length > 15) {
+                commit('updateCurrent', state.searchedPatients.slice(0, 15));
+                commit('updatePaginationInitial', {total: state.searchedPatients.length});
+            }
+            else {
+                commit('updateCurrent', state.searchedPatients); 
+                commit('updatePaginationInitial', {total: state.searchedPatients.length});
+            } 
         }
     },
     getters: {
@@ -81,6 +92,7 @@ export default createStore({
             state.searchedPatients = data;
         },
         updateCurrent(state, data) {
+            console.log('io', data)
             state.patients = data;
         },
         updatePaginationInitial(state, data) {

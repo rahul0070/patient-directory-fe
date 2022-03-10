@@ -45,7 +45,7 @@ export default {
       this.load()
   },
   methods: {
-      ...mapActions(['getAll', 'setPagination', 'triggerSearch']),
+      ...mapActions(['getAll', 'setPagination', 'triggerSearch', 'cancelSearch']),
       load() {
           this.getAll()
           .then(res => {
@@ -58,7 +58,7 @@ export default {
             this.searchTerm = this.searchTermEntered;
             this.triggerSearch(this.searchTerm)
             .then( res => {
-                this.load();
+                //this.load();
             })
             .catch(err => console.log(err));
       },
@@ -68,7 +68,8 @@ export default {
           this.cancelSearch()
           .then( res => {
               console.log('Search cancelled');
-          })
+          });
+          this.load();
       },
       parseDate(str) {
           const d = new Date(str);
