@@ -1,7 +1,14 @@
 <template>
   <div class="search-parent">
+  <div class="search-bar-parent">
+    <input placeholder="Search" v-model="searchTermEntered">
+    <button @click="search"> Search </button>
+  </div>
+  <span v-show="searchClicked"> Showing results for "{{searchTerm}}" </span>
+  <button @click="clearSearch"> Clear search </button>
+
   <div class="search-nav">
-  <span v-show="pagination.show"> Showing {{pagination.lRange}}to{{pagination.hRange}} of {{pagination.total}} </span>
+    <span v-show="pagination.show"> Showing {{pagination.lRange}} to {{pagination.hRange}} of {{pagination.total}} </span>
     <button v-show="isShow('next')" @click="updatePagination('next')"> Next </button>
     <button v-show="isShow('prev')" @click="updatePagination('prev')" > Prev </button>
   </div>
@@ -38,13 +45,30 @@ export default {
       this.load()
   },
   methods: {
-      ...mapActions(['getAll', 'setPagination']),
+      ...mapActions(['getAll', 'setPagination', 'triggerSearch']),
       load() {
           this.getAll()
           .then(res => {
               console.log('Get All', this.patientsData);
                 
           });
+      },
+      search() {
+          this.searchClicked = true;
+            this.searchTerm = this.searchTermEntered;
+            this.triggerSearch(this.searchTerm)
+            .then( res => {
+                this.load();
+            })
+            .catch(err => console.log(err));
+      },
+      clearSearch() {
+          this.searchClicked = false;
+          this.searchTerm = '';
+          this.cancelSearch()
+          .then( res => {
+              console.log('Search cancelled');
+          })
       },
       parseDate(str) {
           const d = new Date(str);
@@ -80,6 +104,9 @@ export default {
   },
   data() {
     return {
+        searchTerm: '',
+        searchTermEntered: '',
+        searchClicked: false,
         paginationUI: {
             show: false,
             next: false,
@@ -98,6 +125,21 @@ export default {
   font-style: normal;
   font-size: 13px;
   margin: 10px;
+}
+.search-bar-parent {
+    margin-bottom: 20px;
+    margin-top: 15px;
+}
+.search-nav {
+    display: flex;
+    height: 20px;
+    gap: 5px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    line-height: 20px;
+}
+.search-nav button {
+    font-size: 12px;
 }
 .search-table {
     width: 900px;

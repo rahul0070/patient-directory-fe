@@ -6,6 +6,7 @@ export default createStore({
         signedIn: true,
         apiUrl: 'https://patients-directory.herokuapp.com/',
         allPatients: [],
+        searchedPatients: [],
         patients: [],
         pagination: {
             show: false,
@@ -45,6 +46,18 @@ export default createStore({
         },
         async setPagination({state, commit}, payload) {
             commit('updatePagination', {lRange: payload.lRange, hRange: payload.hRange});
+        },
+        async triggerSearch({state, commit}, payload) {
+            commit('searchPatients', payload);
+            console.log(state.searchedPatients);
+            if (state.searchedPatients.length > 15) {
+                commit('updateCurrent', state.searchedPatients.slice(0, 15));
+                commit('updatePaginationInitial', {total: state.searchedPatients.length});
+            }
+            else {
+                commit('updateCurrent', state.searchedPatients); 
+                commit('updatePaginationInitial', {total: state.searchedPatients.length});
+            }
         }
     },
     getters: {
@@ -53,8 +66,19 @@ export default createStore({
         }
     },
     mutations: {
+        searchPatients(state, searchTerm) {
+            console.log('hh');
+            const re = new RegExp(searchTerm, 'i')
+            //console.log(re.test('vijay'))
+            state.searchedPatients = state.allPatients.filter((record) => {
+                console.log(record.name, re.test('Vijay testname'), searchTerm);
+                return record.name.match(re);
+                //if (re.test(record.name)) return true;
+            })
+        },
         updateAll(state, data) {
             state.allPatients = data;
+            state.searchedPatients = data;
         },
         updateCurrent(state, data) {
             state.patients = data;
@@ -68,7 +92,8 @@ export default createStore({
         updatePagination(state, data) {
             state.pagination.lRange = data.lRange;
             state.pagination.hRange = data.hRange;
-            const li = state.allPatients.slice(data.lRange, data.hRange)
+            var li2 = state.searchedPatients;
+            const li = li2.slice(data.lRange, data.hRange)
             state.patients = li;
         }
 

@@ -179,8 +179,8 @@ export default {
   color: #070e66
 }
 .search-home-heading {
-  font-size: 18px;
-  margin-top: 15px;
+  font-size: 20px;
+  margin-top: 20px;
   font-weight: bold;
   color: #070e66;
   margin-top: 40px;
