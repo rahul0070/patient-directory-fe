@@ -32,6 +32,10 @@ export default {
   methods: {
     ...mapActions(['addPatient']),
     addClicked() {
+      if (!this.patientEntry.name || !this.patientEntry.case) {
+        window.alert("Patient Name and case number can't be empty");
+        return;
+      }
       this.addPatient(this.patientEntry)
       .then(res => {
         this.patientEntry = {};
