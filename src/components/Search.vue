@@ -9,8 +9,8 @@
 
   <div class="search-nav">
     <span v-show="pagination.show"> Showing {{pagination.lRange}} to {{pagination.hRange}} of {{pagination.total}} </span>
-    <button v-show="isShow('next')" @click="updatePagination('next')"> Next </button>
     <button v-show="isShow('prev')" @click="updatePagination('prev')" > Prev </button>
+    <button v-show="isShow('next')" @click="updatePagination('next')"> Next </button>
   </div>
     <div class="search-table">
         <div class="search-row heading">
