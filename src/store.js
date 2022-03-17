@@ -78,13 +78,9 @@ export default createStore({
     },
     mutations: {
         searchPatients(state, searchTerm) {
-            console.log('hh');
             const re = new RegExp(searchTerm, 'i')
-            //console.log(re.test('vijay'))
             state.searchedPatients = state.allPatients.filter((record) => {
-                console.log(record.name, re.test('Vijay testname'), searchTerm);
-                return record.name.match(re);
-                //if (re.test(record.name)) return true;
+                return (record?.name?.match(re) || record?.diagnosis?.match(re) || record?.case?.match(re) || record?.phone?.match(re) || record?.clinic?.match(re));
             })
         },
         updateAll(state, data) {

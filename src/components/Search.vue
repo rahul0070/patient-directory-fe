@@ -20,12 +20,17 @@
             <div class="search-row-clinic"> Clinic </div>
             <div class="search-row-updated"> Date of Consultation </div>
         </div>
+        <div v-if="patientsData.length">
         <div class="search-row" @click="$emit('patientClicked', patient)" v-for="patient in patientsData" :key="patient._id">
             <div class="search-row-name"> {{patient.name}} </div>
             <div class="search-row-case"> {{patient.case}} </div>
             <div class="search-row-phone"> {{patient.phone}} </div>
             <div class="search-row-clinic"> {{patient.clinic}} </div>
             <div class="search-row-updated"> {{parseDate(patient.date)}} </div>
+        </div>
+        </div>
+        <div v-else>
+            No record found
         </div>
     </div>
   </div>
