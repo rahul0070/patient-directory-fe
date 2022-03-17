@@ -18,14 +18,14 @@
             <div class="search-row-case"> Case Number </div>
             <div class="search-row-phone"> Phone Number </div>
             <div class="search-row-clinic"> Clinic </div>
-            <div class="search-row-updated"> Updated on </div>
+            <div class="search-row-updated"> Date of Consultation </div>
         </div>
         <div class="search-row" @click="$emit('patientClicked', patient)" v-for="patient in patientsData" :key="patient._id">
             <div class="search-row-name"> {{patient.name}} </div>
             <div class="search-row-case"> {{patient.case}} </div>
             <div class="search-row-phone"> {{patient.phone}} </div>
             <div class="search-row-clinic"> {{patient.clinic}} </div>
-            <div class="search-row-updated"> {{parseDate(patient.created_on)}} </div>
+            <div class="search-row-updated"> {{parseDate(patient.date)}} </div>
         </div>
     </div>
   </div>
@@ -73,7 +73,6 @@ export default {
       },
       parseDate(str) {
           const d = new Date(str);
-          console.log(d.getDate(), d.getMonth(), d.getYear())
           if (!d) return '';
           return `${d.getDate()+1} / ${d.getMonth()+1} / ${d.getYear().toString()}`;
       },

@@ -6,9 +6,11 @@
       <input class="add-item" placeholder="Name" v-model="patientEntry.name"/>
       <input class="add-item" placeholder="Case Number" v-model="patientEntry.case"/>
       <input class="add-item" placeholder="Phone Number" v-model="patientEntry.phone"/>
+      <input class="add-item" placeholder="Date of Consultation" v-model="patientEntry.date" type="date"/>
+      <input class="add-item" placeholder="Sex" v-model="patientEntry.sex"/>
       <span class="add-item more" @click="toggleMoreAdd"> More options </span>
         <input v-if="showMoreAdd" class="add-item" placeholder="Address" v-model="patientEntry.address"/>
-        <input v-if="showMoreAdd" class="add-item" placeholder="Comments" v-model="patientEntry.comments"/>
+        <input v-if="showMoreAdd" class="add-item" placeholder="Diagnosis" v-model="patientEntry.comments"/>
       <div class="add-item-submit" @click="addClicked"> Add </div>
     </div>
 
@@ -18,6 +20,11 @@
       <span v-show="showPatient.phone"> <b> Phone number: </b> {{showPatient.phone}}</span>
       <span v-show="showPatient.address"> {{showPatient.address}} </span>
       <span v-show="showPatient.comments"> {{showPatient.comments}} </span>
+      <span v-show="showPatient.sex"> <b> Sex: </b>  {{showPatient.sex}} </span>
+      <span v-show="showPatient.date"> <b> Date of consultation: </b>  {{showPatient.date}} </span>
+      <span v-show="showPatient.dob"> <b> Date of birth: </b>  {{showPatient.dob}} </span>
+      <span v-show="showPatient.created_on"> <b> Created on: </b>  {{parseDate(showPatient.created_on)}} </span>
+      
 
       <div class="button-show-add" @click="showAddPatient=true; showPatientView=false"> Add new patient </div>
     </div>
@@ -60,7 +67,12 @@ export default {
       this.showPatient = obj;
       this.showAddPatient = false;
       this.showPatientView = true;
-    }
+    },
+    parseDate(str) {
+        const d = new Date(str);
+        if (!d) return '';
+        return `${d.getDate()+1} / ${d.getMonth()+1} / ${d.getYear().toString().slice(1)}`;
+    },
   },
   data() {
     return {
