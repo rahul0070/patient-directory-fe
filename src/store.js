@@ -44,6 +44,16 @@ export default createStore({
                 console.log(err);
             })
         },
+        async deletePatient({state}, id) {
+            console.log(id)
+            return axios.delete(state.apiUrl + 'delete?id=' + id)
+            .then( res => {
+                console.log(res);   
+            })
+            .catch( err => {
+                console.log(err);
+            })
+        },
         async setPagination({state, commit}, payload) {
             commit('updatePagination', {lRange: payload.lRange, hRange: payload.hRange});
         },

@@ -19,6 +19,7 @@
             <div class="search-row-phone"> Phone Number </div>
             <div class="search-row-clinic"> Clinic </div>
             <div class="search-row-updated"> Date of Consultation </div>
+            <div class="search-row-delete"> Delete </div>
         </div>
         <div v-if="patientsData.length">
         <div class="search-row" @click="$emit('patientClicked', patient)" v-for="patient in patientsData" :key="patient._id">
@@ -27,6 +28,7 @@
             <div class="search-row-phone"> {{patient.phone}} </div>
             <div class="search-row-clinic"> {{patient.clinic}} </div>
             <div class="search-row-updated"> {{parseDate(patient.date)}} </div>
+            <div class="search-row-delete" @click="deleteRecord(patient._id)"> Delete </div>
         </div>
         </div>
         <div v-else>
@@ -50,13 +52,22 @@ export default {
       this.load()
   },
   methods: {
-      ...mapActions(['getAll', 'setPagination', 'triggerSearch', 'cancelSearch']),
+      ...mapActions(['getAll', 'setPagination', 'triggerSearch', 'cancelSearch', 'deletePatient']),
       load() {
           this.getAll()
           .then(res => {
               console.log('Get All', this.patientsData);
                 
           });
+      },
+      deleteRecord(id) {
+          if (confirm('Are you sure you want to delete this patient?')) {
+                this.deletePatient(id)
+                .then( res => {
+                    console.log('Patient deleted');
+                    this.load();
+                })
+            }
       },
       search() {
           this.searchClicked = true;
@@ -79,7 +90,7 @@ export default {
       parseDate(str) {
           const d = new Date(str);
           if (!d) return '';
-          return `${d.getDate()+1} / ${d.getMonth()+1} / ${d.getYear().toString()}`;
+          return `${d.getDate()+1} / ${d.getMonth()+1} / ${d.getYear().toString().slice(1)}`;
       },
       updatePagination(type) {
           if (type === 'next') {
@@ -170,7 +181,10 @@ export default {
     width: 20%;
 }
 .search-row-clinic {
-    width: 20%;
+    width: 15%;
+}
+.search-row-delete {
+    width: 15%;
 }
 .heading {
     font-weight: bold;
