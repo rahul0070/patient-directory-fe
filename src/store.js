@@ -3,11 +3,12 @@ import axios from 'axios';
 
 export default createStore({
     state: {
-        signedIn: true,
         apiUrl: 'https://patients-directory.herokuapp.com/',
         allPatients: [],
         searchedPatients: [],
         patients: [],
+        userData: {},
+        signedIn: false,
         pagination: {
             show: false,
             total: '',
@@ -16,6 +17,16 @@ export default createStore({
         }
     },
     actions: {
+        async login({state, commit}, payload) {
+            console.log(payload)
+            commit('setUserData', payload);
+        },
+        async logout ({state, commit}) {
+            commit('setLoggedOut');
+        },
+        async setLoggedIn({state, commit}) {
+            commit('setSignInState', true);
+        },
         async getAll({state, commit}) {
             return axios.get(state.apiUrl + 'getAll')
             .then( res => {
@@ -84,9 +95,22 @@ export default createStore({
     getters: {
         patientsData(state) {
             return state.patients;
-        }
+        },
+        signedIn(state) {
+            return state.signedIn;
+        },
     },
     mutations: {
+        setUserData(state, data) {
+            state.userData = {email: data.email, id: data.id, fullName: data.fullName};
+        },
+        setSignInState(state, data) {
+            state.signedIn = data;
+        },
+        setLoggedOut(state) {
+            state.signedIn = false;
+            state.userData = {id:''};
+        },
         searchPatients(state, searchTerm) {
             const re = new RegExp(searchTerm, 'i')
             state.searchedPatients = state.allPatients.filter((record) => {

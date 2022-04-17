@@ -35,6 +35,8 @@
 </template>
 
 <script>
+// 802692104431-nnmjavb8l1kkuspn9sm1efsilhvej35b.apps.googleusercontent.com
+//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
 import {mapState, mapGetters, mapActions} from "vuex";
 import Search from './Search.vue';
 
