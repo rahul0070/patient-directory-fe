@@ -19,7 +19,12 @@ export default {
 
   },
   computed: {
-    ...mapGetters(['signedIn'])
+    ...mapGetters(['userData', 'signedIn'])
+  },
+  data() {
+    return {
+      accepted_users: ['102528462155525318703']
+    }
   },
   methods: {
   ...mapActions(['login', 'setLoggedIn', 'logout']),
@@ -27,7 +32,12 @@ export default {
    this.$gapi.login().then(({ currentUser, gapi, hasGrantedScopes }) => {
       //console.log({ currentUser, gapi, hasGrantedScopes });
       this.login(this.$gapi.getUserData()).then( res => {
-          console.log(this.userData);
+        console.log(this.userData);
+          if (this.userData.id !== '102528462155525318703') {
+            alert('This user is not authenticated');
+            return;
+          }
+          
           this.setLoggedIn();
             window.localStorage.setItem('signedIn','true');
           }

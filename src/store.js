@@ -99,6 +99,9 @@ export default createStore({
         signedIn(state) {
             return state.signedIn;
         },
+        userData(state) {
+            return state.userData;
+        }
     },
     mutations: {
         setUserData(state, data) {
