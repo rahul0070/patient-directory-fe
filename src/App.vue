@@ -15,9 +15,6 @@
 import {mapState, mapGetters, mapActions} from "vuex";
 export default {
   name: 'App',
-  components: {
-
-  },
   computed: {
     ...mapGetters(['userData', 'signedIn'])
   },
